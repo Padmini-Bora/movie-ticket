@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Ticket Booking</title>
+</head>
+<body>
+
+  <h1>Movie Ticket Booking</h1>
+
+  <label for="movie">Select a movie:</label>
+  <select id="movie">
+    <option value="10">Avengers - $10</option>
+    <option value="12">Inception - $12</option>
+    <option value="8">Toy Story - $8</option>
+  </select>
+
+  <h3>Select your seats:</h3>
+  <div id="seat-container"></div>
+
+  <p>You selected <span id="count">0</span> seat(s). Total: $<span id="total">0</span></p>
+
+  <script>
+    const seatContainer = document.getElementById('seat-container');
+    const movieSelect = document.getElementById('movie');
+    const count = document.getElementById('count');
+    const total = document.getElementById('total');
+
+    let ticketPrice = +movieSelect.value;
+
+    const rows = 3;
+    const seatsPerRow = 5;
+    const occupiedSeats = [2, 6, 10]; // Example: occupied seat indices
+
+    // Create seat layout
+    for (let i = 0; i < rows * seatsPerRow; i++) {
+      const btn = document.createElement('button');
+      btn.innerText = i + 1;
+      btn.dataset.index = i;
+      btn.style.margin = '5px';
+
+      if (occupiedSeats.includes(i)) {
+        btn.disabled = true;
+        btn.style.backgroundColor = '#999';
+      } else {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('selected');
+          if (btn.classList.contains('selected')) {
+            btn.style.backgroundColor = 'lightgreen';
+          } else {
+            btn.style.backgroundColor = '';
+          }
+          updateTotal();
+        });
+      }
+
+      seatContainer.appendChild(btn);
+
+      if ((i + 1) % seatsPerRow === 0) {
+        seatContainer.appendChild(document.createElement('br'));
+      }
+    }
+
+    function updateTotal() {
+      const selected = document.querySelectorAll('button.selected');
+      count.innerText = selected.length;
+      total.innerText = selected.length * ticketPrice;
+    }
+
+    movieSelect.addEventListener('change', e => {
+      ticketPrice = +e.target.value;
+      updateTotal();
+    });
+  </script>
+
+</body>
+</html>
